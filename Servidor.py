@@ -1,6 +1,4 @@
 import socket
-import select
-import sys
 from thread import *
 
 """ EL primer argumento AF_INET es el dominio de la direccion del socket. ESto se usa cuando tenemos un dominio de 

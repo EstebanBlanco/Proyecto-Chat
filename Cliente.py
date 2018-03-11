@@ -40,13 +40,7 @@ while True:
             message = socks.recv(2048)
             print message
         else:
-            message = sys.stdin.readline()
+            message = raw_input("Digita tu mensaje > ")
             server.send(message)
-            # Borramos la linea que escribimos por estetica
-            CURSOR_UP = '\033[F'
-            ERASE_LINE = '\033[K'
-            print(CURSOR_UP + ERASE_LINE)
-            sys.stdout.write("<Tu>")
-            sys.stdout.write(message)
-            sys.stdout.flush()
+
 server.close()
