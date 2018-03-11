@@ -1,6 +1,7 @@
 import socket
-import select
 import sys
+
+import select
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
