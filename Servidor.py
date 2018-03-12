@@ -6,20 +6,20 @@ import subprocess
 nombreServidor = socket.gethostname()
 # Obtener Nombre del Servidor
 def ObtenerNombreServidor():
-    return "El nombre del servidor es: " + nombreServidor
+    return "\tEl nombre del servidor es: " + nombreServidor
     #print "Nombre del Servidor: %s" % nombreServidor
 
 # Obtener la direccion IP del servidor
 def ObtenerDireccionIPServidor():
     direccionIP = socket.gethostbyname(nombreServidor)
-    print "Direccion IP: %s" % direccionIP
-    return "La direccion IP del servidor corresponde a: "+ direccionIP
+    print "\tDireccion IP: %s" % direccionIP
+    return "\tLa direccion IP del servidor corresponde a: "+ direccionIP
     #print "Direccion IP: %s" % direccionIP
 
 def ObtenerCantidadProcesos():
     procs = subprocess.check_output(['ps', '-a', '-c', '-ocomm=']).splitlines()
     count = procs.count('kms')
-    return "La cantidad de servicios en el servidor es: "+ str(count)
+    return "\tLa cantidad de servicios en el servidor es: "+ str(count)
 
 
 """ EL primer argumento AF_INET es el dominio de la direccion del socket. ESto se usa cuando tenemos un dominio de 
@@ -35,7 +35,7 @@ IP_address = str(socket.gethostbyname(nombre_equipo))
 Port = int(input("Digita el puerto a utilizar: "))
 
 """Vinculamos el server a una ip y a un puerto que deben ser los mismos que el del cliente """
-server.bind(("172.24.68.168", Port))
+server.bind((IP_address, Port))
 
 """Escuchamos 10 conexiones activas"""
 server.listen(10)
@@ -57,31 +57,15 @@ def clientthread(conn, addr):
             if message:
                 # Imprime direccion y mensaje del usuario
                 print "<" + addr[0] + " " + nicks[conn] + " > " + message
-                # Llamamos a la funcion broadcast que pondre ahora para enviar mensaje a todos
-                if message == "1\n":
-                    conn.send(ObtenerNombreServidor())
-                elif message == "2\n":
-                    conn.send(ObtenerDireccionIPServidor())
-                elif message == "3\n":
-                    print "Ni verga hace"
-                    #conn.send(ObtenerCantidadProcesos())
-                elif message == "4\n":
-                    print ()
-                else:
-                    message_to_send = "<" + nicks[conn] + "> " + message
-                    broadcast(message_to_send, conn)
+                message_to_send = "<" + nicks[conn] + "> " + message
+                broadcast(message_to_send, conn)
             else:
                 """El mensaje puede no tener contenido si la conexion
                 esta rota, en este caso eliminamos la conexion """
                 # La funcion remove la escribire ahora
                 remove(conn)
-
-
         except:
             continue
-
-
-"""Usando la funcion de aqui abajo, transmitimos el mensaje a todos los clientes  """
 
 
 def broadcast(message, connection):
@@ -140,11 +124,11 @@ while True:
                 conn.send("1")
     # Ahora imrimos la direccion y el nick del usuario que se acaba de conectar
     print addr[0] + " " + nick + " conectado"
-    conn.send("Bienvenido al Servidor de Chat!!!")
+    conn.send("--> Bienvenido al Servidor de Chat!!!")
 
     #Hacemos un bucle en las opciones primarias del cliente.
     while True:
-        conn.send("Menu Servidor Chat\n"
+        conn.send("\nMenu Servidor Chat\n"
                   "1: Obtener nombre\n"
                   "2: IPv4 del servidor\n"
                   "3: Cantidad de procesos\n"
@@ -152,7 +136,6 @@ while True:
                   "5: Entrar al chat")
 
         message = conn.recv(1)
-        print(message)
         if message == "1":
             conn.send(ObtenerNombreServidor())
         elif message == "2":
