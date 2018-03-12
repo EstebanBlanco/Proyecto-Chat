@@ -3,7 +3,7 @@ import select
 import sys
 from thread import *
 
-import subprocess
+import psutil
 
 nombreServidor = socket.gethostname()
 # Obtener Nombre del Servidor
@@ -19,8 +19,7 @@ def ObtenerDireccionIPServidor():
     #print "Direccion IP: %s" % direccionIP
 
 def ObtenerCantidadProcesos():
-    procs = subprocess.check_output(['ps', '-a', '-c', '-ocomm=']).splitlines()
-    count = procs.count('kms')
+    count = len(psutil.pids())
     return "La cantidad de servicios en el servidor es: "+ str(count)
 
 
@@ -65,8 +64,7 @@ def clientthread(conn, addr):
                 elif message == "2\n":
                     conn.send(ObtenerDireccionIPServidor())
                 elif message == "3\n":
-                    print "Ni verga hace"
-                    #conn.send(ObtenerCantidadProcesos())
+                    conn.send(ObtenerCantidadProcesos())
                 elif message == "4\n":
                     print ()
                 else:
