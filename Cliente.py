@@ -25,7 +25,7 @@ while (truck == "0"):
 
 while True:
     # Mantiene una lista de posible flujos de entrada
-    sockets_list = [sys.stdin, server]
+    sockets_list = [server]
 
     """Hay dos posible situaciones de entrada. O el usuario quiere dar una entrada manual para
     enviar a otras personas o el servidor esta enviando un mensaje para ser impreso en pantalla.
@@ -35,7 +35,7 @@ while True:
     verdadera """
     read_sockets, write_socket, error_socket = select.select(sockets_list, [], [])
 
-    for socks in read_sockets:
+    for socks in read_sockets + [sys.stdin]:
         if socks == server:
             message = socks.recv(2048)
             print message
@@ -46,7 +46,6 @@ while True:
             CURSOR_UP = '\033[F'
             ERASE_LINE = '\033[K'
             print(CURSOR_UP + ERASE_LINE)
-            sys.stdout.write("<Tu>")
-            sys.stdout.write(message)
-            sys.stdout.flush()
+            print ("<Tu>")
+            print (message)
 server.close()
