@@ -1,3 +1,4 @@
+# coding=utf-8
 import socket
 from thread import *
 
@@ -12,9 +13,7 @@ def ObtenerNombreServidor():
 # Obtener la direccion IP del servidor
 def ObtenerDireccionIPServidor():
     direccionIP = socket.gethostbyname(nombreServidor)
-    print "\tDireccion IP: %s" % direccionIP
     return "\tLa direccion IP del servidor corresponde a: "+ direccionIP
-    #print "Direccion IP: %s" % direccionIP
 
 def ObtenerCantidadProcesos():
     procs = subprocess.check_output(['ps', '-a', '-c', '-ocomm=']).splitlines()
@@ -46,47 +45,71 @@ list_of_clients = []
 # Y aqui sus nicks, pongo admin para que no pueda usarse
 nicks = {"admin": "admin"}
 
-
 def clientthread(conn, addr):
-    # Le enviamos un mensaje al nuevo cliente conectado
-    conn.send("Bienvenido al chat {0}!!!".format(nicks[conn]))
+    """conn.send("\n--> Bienvenido al Servidor de Chat!!!\n"
+              "### Menu Servidor Chat ###\n"
+              "1: Obtener nombre\n"
+              "2: IPv4 del servidor\n"
+              "3: Cantidad de procesos\n"
+              "4: Consultar la hora\n"
+              "5: Entrar al chat\n")
+    """
+    conn.send("conectando...")
+    while True:
+        """conn.send("\n--> Bienvenido al Servidor de Chat!!!\n"
+                  "### Menu Servidor Chat ###\n"
+                  "1: Obtener nombre\n"
+                  "2: IPv4 del servidor\n"
+                  "3: Cantidad de procesos\n"
+                  "4: Consultar la hora\n"
+                  "5: Entrar al chat\n")"""
+        message = conn.recv(1)
+        if message == "1":
+            conn.send(ObtenerNombreServidor())
+        elif message == "2":
+            conn.send(ObtenerDireccionIPServidor())
+        elif message == "3":
+            print ("El cliente quiere la opcion 3")
+        elif message == "4":
+            print ("El cliente quiere la opcion 4")
+        elif message == "5":
+            LivingRoomChat(conn)
+        else:
+            conn.send("\nOpcion invalida\n")
 
+"""
+-> El cuarto de chat, en esta función se corre un while true el cual esta esperando una respuesta del usuario para 
+enviarla a los demas usuario en la lista de usuarios.
+
+:parameter -> connChat, usuario que envio el mensaje.
+"""
+def LivingRoomChat(connChat):
+    connChat.send("\n\tBienvenido al chat {0}!!!\n".format(nicks[connChat]))
     while True:
         try:
-            message = conn.recv(2048)
+            message = connChat.recv(2048)
             if message:
-                # Imprime direccion y mensaje del usuario
-                print "<" + addr[0] + " " + nicks[conn] + " > " + message
-                message_to_send = "<" + nicks[conn] + "> " + message
-                broadcast(message_to_send, conn)
+                print "<" + addr[0] + " " + nicks[connChat] + " > " + message
+                message_to_send = "<" + nicks[connChat] + "> " + message
+                broadcast(message_to_send, connChat)
             else:
-                """El mensaje puede no tener contenido si la conexion
-                esta rota, en este caso eliminamos la conexion """
-                # La funcion remove la escribire ahora
-                remove(conn)
+                remove(connChat)
         except:
-            continue
-
+            pass
 
 def broadcast(message, connection):
+    len(list_of_clients)
     for clients in list_of_clients:
         if clients != connection:
             try:
                 clients.send(message)
             except:
                 clients.close()
-            # Si el enlace esta roto eliminamos el cliente
-            remove(clients)
-
-
-"""La siguiente funcion simplemente elimina el objeto de la lista que se creara al comienzo, ahora 
-escribire esa parte """
-
+                remove(clients)
 
 def remove(connection):
     if connection in list_of_clients:
         list_of_clients.remove(connection)
-
 
 while True:
     """Acepta una solicitud de conexion y almacena dos parametros, conn que un objeto socket
@@ -122,30 +145,9 @@ while True:
                 t = False
                 nicks[conn] = nick
                 conn.send("1")
-    # Ahora imrimos la direccion y el nick del usuario que se acaba de conectar
-    print addr[0] + " " + nick + " conectado"
-    conn.send("--> Bienvenido al Servidor de Chat!!!")
 
-    #Hacemos un bucle en las opciones primarias del cliente.
-    while True:
-        conn.send("\nMenu Servidor Chat\n"
-                  "1: Obtener nombre\n"
-                  "2: IPv4 del servidor\n"
-                  "3: Cantidad de procesos\n"
-                  "4: Consultar la hora\n"
-                  "5: Entrar al chat")
-
-        message = conn.recv(1)
-        if message == "1":
-            conn.send(ObtenerNombreServidor())
-        elif message == "2":
-            conn.send(ObtenerDireccionIPServidor())
-        elif message == "3":
-            print ("El cliente quiere la opcion 3")
-        elif message == "4":
-            print ("El cliente quiere la opcion 4")
-        else:
-            start_new_thread(clientthread, (conn, addr))  # Creamos un proceso individual para el cliente que se conecta
+    print addr[0] + " " + nick + " se conecto"
+    start_new_thread(clientthread, (conn, addr))  # Creamos un proceso individual para el cliente que se conecta
 
 conn.close()
 server.close()

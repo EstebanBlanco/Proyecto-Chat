@@ -3,5 +3,7 @@
   <component name="NewModuleRootManager">
     <orderEntry type="jdk" jdkName="Python 2.7 (Servidor_de_chat)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="R User Library" level="project" />
+    <orderEntry type="library" name="R Skeletons" level="application" />
   </component>
 </module>
