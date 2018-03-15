@@ -4,6 +4,8 @@ from thread import *
 
 import subprocess
 
+#import psutil
+
 nombreServidor = socket.gethostname()
 # Obtener Nombre del Servidor
 def ObtenerNombreServidor():
@@ -15,14 +17,14 @@ def ObtenerDireccionIPServidor():
     direccionIP = socket.gethostbyname(nombreServidor)
     return "\tLa direccion IP del servidor corresponde a: "+ direccionIP
 
+
 def ObtenerCantidadProcesos():
-    procs = subprocess.check_output(['ps', '-a', '-c', '-ocomm=']).splitlines()
-    count = procs.count('kms')
-    return "\tLa cantidad de servicios en el servidor es: "+ str(count)
+    count = len(psutil.pids())
+    return "La cantidad de servicios en el servidor es: "+ str(count)
 
 
-""" EL primer argumento AF_INET es el dominio de la direccion del socket. ESto se usa cuando tenemos un dominio de 
-internet con dos hosts. El segundo argumento es el tipo socket. SOCK_STREAM siginifica que los datos caracteres se 
+""" EL primer argumento AF_INET es el dominio de la direccion del socket. ESto se usa cuando tenemos un dominio de
+internet con dos hosts. El segundo argumento es el tipo socket. SOCK_STREAM siginifica que los datos caracteres se
 leen en un flujo continuo
 """
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
