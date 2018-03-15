@@ -48,23 +48,8 @@ list_of_clients = []
 nicks = {"admin": "admin"}
 
 def clientthread(conn, addr):
-    """conn.send("\n--> Bienvenido al Servidor de Chat!!!\n"
-              "### Menu Servidor Chat ###\n"
-              "1: Obtener nombre\n"
-              "2: IPv4 del servidor\n"
-              "3: Cantidad de procesos\n"
-              "4: Consultar la hora\n"
-              "5: Entrar al chat\n")
-    """
     conn.send("conectando...")
     while True:
-        """conn.send("\n--> Bienvenido al Servidor de Chat!!!\n"
-                  "### Menu Servidor Chat ###\n"
-                  "1: Obtener nombre\n"
-                  "2: IPv4 del servidor\n"
-                  "3: Cantidad de procesos\n"
-                  "4: Consultar la hora\n"
-                  "5: Entrar al chat\n")"""
         message = conn.recv(1)
         if message == "1":
             conn.send(ObtenerNombreServidor())
@@ -72,8 +57,9 @@ def clientthread(conn, addr):
             conn.send(ObtenerDireccionIPServidor())
         elif message == "3":
             print ("El cliente quiere la opcion 3")
+            conn.send("...")
         elif message == "4":
-            print ("El cliente quiere la opcion 4")
+            conn.send("...")
         elif message == "5":
             LivingRoomChat(conn)
         else:
@@ -86,6 +72,8 @@ enviarla a los demas usuario en la lista de usuarios.
 :parameter -> connChat, usuario que envio el mensaje.
 """
 def LivingRoomChat(connChat):
+    estoyEnChat = True
+    broadcast("<" + addr[0] + " " + nicks[connChat] + " > Se conecto", connChat)
     connChat.send("\n\tBienvenido al chat {0}!!!\n".format(nicks[connChat]))
     while True:
         try:
@@ -96,8 +84,17 @@ def LivingRoomChat(connChat):
                 broadcast(message_to_send, connChat)
             else:
                 remove(connChat)
+
+            if message == "salir":
+                print "<" + addr[0] + " " + nicks[connChat] + " > " + "Salio del chat"
+                message_to_send = "<" + nicks[connChat] + "> " + "Salio del chat"
+                broadcast(message_to_send, connChat)
+                estoyEnChat = False
         except:
             pass
+        if not estoyEnChat:
+            break
+            return
 
 def broadcast(message, connection):
     len(list_of_clients)

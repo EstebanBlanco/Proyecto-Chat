@@ -30,19 +30,40 @@ def imprimirMenu():
     "4: Consultar la hora\n"
     "5: Entrar al chat\n")
 
+def hiloEscucha(conn, addr):
+    while True:
+        sockets_list = [conn]
+        read_sockets, write_socket, error_socket = select.select(sockets_list, [], [])
+        if read_sockets[0] == conn:
+            message = read_sockets[0].recv(2048)
+            print message
+
+def hiloEscribe(conn, addr):
+    estoyEnChat = False
+    while True:
+        if not estoyEnChat:
+            imprimirMenu()
+            message = raw_input(":::> ")
+        else:
+            message = raw_input()
+
+        server.send(message)
+        if message == "5":
+            estoyEnChat = True
+        elif message == "salir":
+            estoyEnChat = False
+
+
+start_new_thread(hiloEscucha, (server, "listening"))
+
+start_new_thread(hiloEscribe, (server, "writing"))
+
 estoyEnChat = False
 
 """
     Flujo de conexion con el servidor.
 """
 while True:
-    """
-    message = server.recv(2048)
-    print message
-    message = raw_input(":::> ")
-    if message == "5":
-        lanzarChat(server)
-    server.send(message)
     """
     if not estoyEnChat:
         imprimirMenu()
@@ -62,5 +83,6 @@ while True:
                 estoyEnChat = True
             elif message == "salir":
                 estoyEnChat = False
+    """
 
 server.close()
