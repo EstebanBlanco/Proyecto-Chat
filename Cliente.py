@@ -5,7 +5,7 @@ from thread import *
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-IP_address = str(socket.gethostbyname(socket.gethostname())) #raw_input("IPv4 a conectar: ")
+IP_address = raw_input("IPv4 a conectar: ") #str(socket.gethostbyname(socket.gethostname()))
 Port = int(input("Puerto: "))
 server.connect((IP_address, Port))
 
