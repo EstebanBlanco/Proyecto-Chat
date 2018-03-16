@@ -1,16 +1,10 @@
 # coding=utf-8
 import socket
 import thread
-import subprocess
-
-<<<<<<< HEAD
 #import psutil
 import datetime
 import psutil as psutil
 import pytz as pytz
-=======
-# import psutil
->>>>>>> 8b8c42b3f5273f0eb4d3a5ff3470449b8c52f50a
 
 zones = [
 {'timezones': ['Europe/Andorra'], 'code': 'AD', 'continent': 'Europe', 'name': 'Andorra', 'capital': 'Andorra la Vella'},
