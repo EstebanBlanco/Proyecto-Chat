@@ -216,6 +216,7 @@ def ObtenerDireccionIPServidor():
 # Obtener la cantidad de procesos ejecutándose en el servidor
 def ObtenerCantidadProcesos():
     count = len(psutil.pids())
+
     return "La cantidad de servicios en el servidor es: "+ str(count)
 
 # Obtener la lista de zonas horarias para permitir al usuario elegir una.
@@ -234,6 +235,7 @@ def ObtenerHoraria(index):
     sa_time = datetime.datetime.now(zonaHoraria)
 
     return sa_time.strftime('%Y/%m/%d %H:%M:%S')
+
 
 """
 EL primer argumento AF_INET es el dominio de la direccion del socket. ESto se usa cuando tenemos un dominio de
@@ -256,8 +258,14 @@ nicks = {"admin": "admin"}
 
 """
 -> El hilo que se ejecutara por cada cliente conectado al servidor.
+<<<<<<< HEAD
 :parameter conn ->La canexion del cliente
 :parameter addr ->La direccion IPv4 del cliente.
+=======
+
+:parameter conn ->La canexion del cliente
+:parameter addr ->La direccion IPv4 del cliente. 
+>>>>>>> e4949916c4b52657e86d6f73d36fb3333d058a68
 """
 def clientthread(conn, addr):
     conn.send("conectando...")
@@ -279,9 +287,13 @@ def clientthread(conn, addr):
             conn.send("\nOpcion invalida\n")
 
 
+
 """
 -> El cuarto de chat, en esta función se corre un while true el cual esta esperando una respuesta del usuario para
 enviarla a los demas usuario en la lista de usuarios.
+=======
+
+
 :parameter -> connChat, usuario que envio el mensaje.
 """
 def LivingRoomChat(connChat):

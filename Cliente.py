@@ -51,7 +51,7 @@ def hiloEscribe(conn, addr):
         if message == "4":
             message = raw_input(":::> ")
             server.send(message)
-        if message == "5":
+        elif message == "5":
             estoyEnChat = True
         elif message == "salir":
             estoyEnChat = False
@@ -70,6 +70,10 @@ while True:
     """
     if not estoyEnChat:
         imprimirMenu()
+<<<<<<< HEAD
+=======
+
+>>>>>>> e4949916c4b52657e86d6f73d36fb3333d058a68
     sockets_list = [server]
     read_sockets, write_socket, error_socket = select.select(sockets_list, [], [])
     for socks in read_sockets + [sys.stdin]:
